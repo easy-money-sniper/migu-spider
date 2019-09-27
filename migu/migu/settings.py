@@ -50,9 +50,16 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'migu.middlewares.MiguDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 80,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 90,
+    'migu.middlewares.ProxyMiddleware': 100
+}
+
+# Retry when proxies fail
+RETRY_TIMES = 3
+# Retry on most error codes since proxies fail for different reasons
+RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html

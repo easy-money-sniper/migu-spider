@@ -7,6 +7,7 @@ from scrapy import Request
 from scrapy.selector import Selector
 from selenium import webdriver
 
+import migu.spiders.ip_proxy as proxy_helper
 from migu.items import MiguItem
 
 
@@ -65,17 +66,20 @@ class JaySpider(scrapy.Spider):
         super(JaySpider, self).__init__(name, **kwargs)
 
         if not username or not password:
-            raise Exception('please pass [username] and [password] to spider')
+            raise Exception('please pass [username] and [password] to spider!!!')
 
         self.type = type
         self.singer_id = singer
+        self.proxies = proxy_helper.get_proxies()
+        if len(self.proxies) <= 0:
+            raise Exception('no valid ip proxy here!!!')
         self.cookie = login_and_get_cookie(username=username, password=password)
         try:
             with open(self.singer_id + '_song_ids.log', 'r') as f:
                 self.download_songs = set([song.strip('\n') for song in set(f)])
         except IOError as e:
             self.download_songs = set()
-            print e
+            print(e)
 
     name = 'jay'
     allowed_domains = ['music.migu.cn']

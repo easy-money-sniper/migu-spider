@@ -4,8 +4,16 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import random
 
 from scrapy import signals
+from scrapy.downloadermiddlewares.httpproxy import HttpProxyMiddleware
+
+
+class ProxyMiddleware(HttpProxyMiddleware):
+    def process_request(self, request, spider):
+        request.meta['proxy'] = random.choice(spider.proxies)
+        print('current proxy is: %s' % request.meta['proxy'])
 
 
 class MiguSpiderMiddleware(object):

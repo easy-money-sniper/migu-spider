@@ -5,13 +5,13 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import os
-from urllib2 import unquote
+from urllib.parse import unquote
 
 import requests
 from pydispatch import dispatcher
 from scrapy import signals
 
-from settings import MUSIC_DIR
+from migu.settings import MUSIC_DIR
 
 
 def get_name(migu_name):
@@ -48,7 +48,7 @@ class MiguPipeline(object):
                         code.write(f.content)
                     self.id_set.add(item['id'])
                 except IOError as e:
-                    print e
+                    print(e)
 
     # 将已下载的id记录到临时文件
     def spider_closed(self, spider):
